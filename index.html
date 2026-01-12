@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EcoQuest: School Compost Adventure</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e8f5e9;
+    text-align: center;
+}
+h1 {
+    color: #2e7d32;
+}
+.game-area {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.box {
+    width: 200px;
+    height: 200px;
+    border: 3px dashed #4caf50;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f1f8e9;
+}
+.item {
+    padding: 10px;
+    margin: 5px;
+    background-color: #aed581;
+    cursor: grab;
+    border-radius: 5px;
+}
+#garden {
+    margin-top: 30px;
+}
+#plant {
+    font-size: 60px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🌱 EcoQuest: School Compost Adventure 🌱</h1>
+<p>Drag the items to the correct box!</p>
+
+<div class="game-area">
+    <div class="box" ondrop="drop(event, 'organic')" ondragover="allowDrop(event)">
+        <h3>Organic Waste</h3>
+    </div>
+
+    <div class="box" ondrop="drop(event, 'nonorganic')" ondragover="allowDrop(event)">
+        <h3>Non-Organic Waste</h3>
+    </div>
+</div>
+
+<div>
+    <div class="item" draggable="true" ondragstart="drag(event)" id="banana">🍌 Banana Peel</div>
+    <div class="item" draggable="true" ondragstart="drag(event)" id="paper">📰 Paper</div>
+    <div class="item" draggable="true" ondragstart="drag(event)" id="bottle">🥤 Plastic Bottle</div>
+    <div class="item" draggable="true" ondragstart="drag(event)" id="apple">🍎 Apple Core</div>
+</div>
+
+<h2 id="message"></h2>
+
+<div id="garden">
+    <h2>School Garden</h2>
+    <div id="plant">🌱</div>
+</div>
+
+<script>
+let score = 0;
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev, type) {
+    ev.preventDefault();
+    let data = ev.dataTransfer.getData("text");
+
+    const organicItems = ["banana", "apple", "paper"];
+    const nonOrganicItems = ["bottle"];
+
+    if ((type === "organic" && organicItems.includes(data)) ||
+        (type === "nonorganic" && nonOrganicItems.includes(data))) {
+        score++;
+        document.getElementById(data).style.display = "none";
+        document.getElementById("message").innerText = "✅ Great job!";
+        growPlant();
+    } else {
+        document.getElementById("message").innerText = "❌ Try again!";
+    }
+}
+
+function growPlant() {
+    const plant = document.getElementById("plant");
+    if (score === 1) plant.innerText = "🌿";
+    if (score === 2) plant.innerText = "🌳";
+    if (score === 3) plant.innerText = "🌸";
+    if (score >= 4) {
+        plant.innerText = "🌻";
+        document.getElementById("message").innerText =
+            "🎉 Compost complete! The garden is growing thanks to you!";
+    }
+}
+</script>
+
+</body>
+</html>
